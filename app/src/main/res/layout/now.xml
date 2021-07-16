@@ -13,6 +13,15 @@
         <!--
         android:fitsSystemWindows="true" 为状态栏留出空间，保证不会覆盖状态栏
         -->
+        <Button
+            android:id="@+id/navBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="15dp"
+            android:fitsSystemWindows="true"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_home"
+            android:layout_marginLeft="15dp" />
 
         <TextView
             android:id="@+id/placeName"
