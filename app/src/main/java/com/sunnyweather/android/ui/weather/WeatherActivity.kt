@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sunnyweather.android.R
 import com.sunnyweather.android.logic.model.Weather
 import com.sunnyweather.android.logic.model.getSky
@@ -29,6 +30,7 @@ class WeatherActivity : AppCompatActivity() {
     private lateinit var ultravioletText: TextView
     private lateinit var carWashingText: TextView
     private lateinit var weatherLayout: ScrollView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
@@ -54,6 +56,7 @@ class WeatherActivity : AppCompatActivity() {
         ultravioletText = findViewById(R.id.ultravioletText)
         carWashingText = findViewById(R.id.carWashingText)
         weatherLayout = findViewById(R.id.weatherLayout)
+        swipeRefresh = findViewById(R.id.swipeRefresh)
 
         /*获取某地天气信息*/
         if (viewModel.locationLng.isEmpty()) {
@@ -75,8 +78,17 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
+            swipeRefresh.isRefreshing = false  // 在刷新结束后，设置刷新为false，并隐藏进度条
         })
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary) // 设置下拉刷新进度条颜色
+        refreshWeather()
+        swipeRefresh.setOnRefreshListener { // 设置监听器
+            refreshWeather()
+        }
+    }
+    private fun refreshWeather() {
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+        swipeRefresh.isRefreshing = true
     }
 
     /*显示天气详细信息*/
