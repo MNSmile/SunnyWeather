@@ -11,7 +11,7 @@
         android:layout_height="70dp"
         android:fitsSystemWindows="true">
         <!--
-        android:fitsSystemWindows="true" 为状态栏留出空间
+        android:fitsSystemWindows="true" 为状态栏留出空间，保证不会覆盖状态栏
         -->
 
         <TextView

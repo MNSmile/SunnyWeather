@@ -18,4 +18,10 @@ class PlaceViewModel : ViewModel() {
     fun searchPlaces(query: String) { // 每当searchPlaces()方法被调用且观察到searchLiveData数据发生改变时，就会执行switchMap()方法，并返回一个可观察的LiveData
         searchLiveData.value = query
     }
+
+    fun savePlace(place: Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 }

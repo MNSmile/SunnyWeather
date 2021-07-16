@@ -18,17 +18,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WeatherActivity : AppCompatActivity() {
-    lateinit var placeName: TextView
-    lateinit var currentTemp: TextView
-    lateinit var currentSky: TextView
-    lateinit var currentAQI: TextView
-    lateinit var nowLayout: RelativeLayout
-    lateinit var forcecastLayout: LinearLayout
-    lateinit var coldRiskText: TextView
-    lateinit var dressingText: TextView
-    lateinit var ultravioletText: TextView
-    lateinit var carWashingText: TextView
-    lateinit var weatherLayout: ScrollView
+    private lateinit var placeName: TextView
+    private lateinit var currentTemp: TextView
+    private lateinit var currentSky: TextView
+    private lateinit var currentAQI: TextView
+    private lateinit var nowLayout: RelativeLayout
+    private lateinit var forcecastLayout: LinearLayout
+    private lateinit var coldRiskText: TextView
+    private lateinit var dressingText: TextView
+    private lateinit var ultravioletText: TextView
+    private lateinit var carWashingText: TextView
+    private lateinit var weatherLayout: ScrollView
 
     val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
@@ -42,6 +42,7 @@ class WeatherActivity : AppCompatActivity() {
         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         window.statusBarColor = Color.TRANSPARENT // 设置为透明色
 
+        /*实例化*/
         placeName = findViewById(R.id.placeName)
         currentTemp = findViewById(R.id.currentTemp)
         currentSky = findViewById(R.id.currentSky)
@@ -54,6 +55,7 @@ class WeatherActivity : AppCompatActivity() {
         carWashingText = findViewById(R.id.carWashingText)
         weatherLayout = findViewById(R.id.weatherLayout)
 
+        /*获取某地天气信息*/
         if (viewModel.locationLng.isEmpty()) {
             viewModel.locationLng = intent.getStringExtra("location_lng") ?: ""
         }
@@ -81,15 +83,16 @@ class WeatherActivity : AppCompatActivity() {
     private fun showWeatherInfo(weather: Weather) {
         placeName.text = viewModel.placeName
         val realtime = weather.realtime
-        Log.d("hhh", "showWeatherInfo: ${realtime.airQuality.aqi.chn}, ${realtime.temperature}")
+        //Log.d("hhh", "showWeatherInfo: ${realtime.airQuality.aqi.chn}, ${realtime.temperature}")
         val daily = weather.daily
         /*填充 now.xml 布局中数据*/
         val currentTempText = "${realtime.temperature.toInt()}"
         currentTemp.text = currentTempText
-        currentSky.text = getSky(realtime.skycon).info        //
+        currentSky.text = getSky(realtime.skycon).info
         val currentPM25Text = "空气指数 ${realtime.airQuality.aqi.chn.toInt()}"
         currentAQI.text = currentPM25Text
-        nowLayout.setBackgroundResource(getSky(realtime.skycon).bg)
+        nowLayout.setBackgroundResource(getSky(realtime.skycon).bg) // 设置背景图片
+
         /*填充 forecast.xml 布局中的数据*/
         forcecastLayout.removeAllViews()
         val days = daily.skycon.size
@@ -101,6 +104,7 @@ class WeatherActivity : AppCompatActivity() {
             val skyIcon = view.findViewById(R.id.skyIcon) as ImageView
             val skyInfo = view.findViewById(R.id.skyInfo) as TextView
             val temperaureInfo = view.findViewById(R.id.temperatureInfo) as TextView
+
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             dateInfo.text = simpleDateFormat.format(skycon.date)
             val sky = getSky(skycon.value)
@@ -110,6 +114,7 @@ class WeatherActivity : AppCompatActivity() {
             temperaureInfo.text = tempText
             forcecastLayout.addView(view)
         }
+
         /*填充 life_index.xml 布局中的数据*/
         val lifeIndex = daily.lifeIndex
         coldRiskText.text = lifeIndex.coldRisk[0].desc
